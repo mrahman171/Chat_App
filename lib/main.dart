@@ -1,6 +1,8 @@
 import 'package:login_signup_project/screens/authenticate.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:login_signup_project/screens/chats.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +28,17 @@ class MyApp extends StatelessWidget {
               textTheme: ButtonTextTheme.primary,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)))),
-      home: Authenticate(),
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, userSnashot) {
+            if (userSnashot.hasData) {
+              return ChatScreen();
+            }
+            return Authenticate();
+          }),
     );
   }
 }
+
+
+//Authenticate()
