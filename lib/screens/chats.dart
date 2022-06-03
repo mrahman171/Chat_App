@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:login_signup_project/chat/messages.dart';
+import 'package:login_signup_project/chat/new_message.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -38,34 +40,24 @@ class ChatScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('chats/hzsnsIpLQnfhKjF4KJW4/messages')
-            .snapshots(),
-        builder: (ctx, AsyncSnapshot<dynamic> streamSnapshot) {
-          if (streamSnapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final documents = streamSnapshot.data.docs;
-          return ListView.builder(
-            itemCount: streamSnapshot.data!.docs.length,
-            itemBuilder: (ctx, index) => Container(
-              padding: EdgeInsets.all(10),
-              child: Text(documents[index]['text']),
+      body: Container(
+        child: Column(
+          children: [
+            Expanded(
+              child: Massages(),
             ),
-          );
-        },
+            NewMassage(),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          FirebaseFirestore.instance
-              .collection('chats/hzsnsIpLQnfhKjF4KJW4/messages')
-              .add({'text': "This message add by clicking the button"});
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.add),
+      //   onPressed: () {
+      //     FirebaseFirestore.instance
+      //         .collection('chats/hzsnsIpLQnfhKjF4KJW4/messages')
+      //         .add({'text': "This message add by clicking the button"});
+      //   },
+      // ),
     );
   }
 }
