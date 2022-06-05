@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:login_signup_project/chat/message_bubble.dart';
 
 class Massages extends StatelessWidget {
   const Massages({super.key});
@@ -21,10 +22,24 @@ class Massages extends StatelessWidget {
           return ListView.builder(
             reverse: true,
             itemCount: chatSnapshot.data!.docs.length,
-            itemBuilder: (ctx, index) => Text(
+            itemBuilder: (ctx, index) => MessageBubble(
               chatSnapshot.data!.docs[index]['text'],
             ),
           );
         });
   }
 }
+
+
+
+
+
+// final chatDocs = chatSnapshot.data.doc;
+//                 return ListView.builder(
+//                   reverse: true,
+//                   itemCount: chatDocs.length,
+//                   itemBuilder: (ctx, index) => MessageBubble(
+//                     chatDocs[index]['text'],
+//                     chatDocs[index]['username'],
+//                   ),
+//                 );
