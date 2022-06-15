@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class NewMassage extends StatefulWidget {
-  const NewMassage({super.key});
-
+class NewMessage extends StatefulWidget {
   @override
-  State<NewMassage> createState() => _NewMassageState();
+  _NewMessageState createState() => _NewMessageState();
 }
 
-class _NewMassageState extends State<NewMassage> {
-  var _enteredMessage = '';
+class _NewMessageState extends State<NewMessage> {
   final _controller = new TextEditingController();
-  void _sendMessage() {
+  var _enteredMessage = '';
+
+  void _sendMessage() async {
     FocusScope.of(context).unfocus();
-    FirebaseFirestore.instance.collection('chat').add(
-      {
-        'text': _enteredMessage,
-        'createdAt': Timestamp.now(),
-      },
-    );
+    final user = await FirebaseAuth.instance.currentUser;
+    final userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .get();
+    FirebaseFirestore.instance.collection('chat').add({
+      'text': _enteredMessage,
+      'createdAt': Timestamp.now(),
+      'userId': user?.uid,
+    });
     _controller.clear();
   }
 
@@ -28,22 +32,25 @@ class _NewMassageState extends State<NewMassage> {
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.all(8),
       child: Row(
-        children: [
+        children: <Widget>[
           Expanded(
             child: TextField(
-                controller: _controller,
-                decoration: InputDecoration(labelText: 'Send a message....'),
-                onChanged: (value) {
-                  setState(() {
-                    _enteredMessage = value;
-                  });
-                }),
+              controller: _controller,
+              decoration: InputDecoration(labelText: 'Send a message...'),
+              onChanged: (value) {
+                setState(() {
+                  _enteredMessage = value;
+                });
+              },
+            ),
           ),
           IconButton(
             color: Theme.of(context).primaryColor,
-            icon: Icon(Icons.send),
+            icon: Icon(
+              Icons.send,
+            ),
             onPressed: _enteredMessage.trim().isEmpty ? null : _sendMessage,
-          ),
+          )
         ],
       ),
     );
