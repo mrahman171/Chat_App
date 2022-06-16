@@ -26,9 +26,24 @@ class Massages extends StatelessWidget {
             itemCount: chatDocs.length,
             itemBuilder: (ctx, index) => MessageBubble(
               chatDocs[index]['text'],
+              chatDocs[index]['username'],
               chatDocs[index]['userId'] == uid,
             ),
           );
         });
   }
 }
+
+
+
+
+
+// final chatDocs = chatSnapshot.data.doc;
+//                 return ListView.builder(
+//                   reverse: true,
+//                   itemCount: chatDocs.length,
+//                   itemBuilder: (ctx, index) => MessageBubble(
+//                     chatDocs[index]['text'],
+//                     chatDocs[index]['username'],
+//                   ),
+//                 );
